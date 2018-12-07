@@ -6,21 +6,13 @@ extern "C"{
 }
 
 
-//extern ETH_HandleTypeDef heth;
+
 extern "C"  netif * get_gnetif()
 {
 	extern netif gnetif;
 	return &gnetif;
 }
 
-//typedef enum
-//{
-//	ETHERNET_LINK_ERR,
-//	ETHERNET_LINK_OK,
-//	ETHERNET_LINK_UP,
-//	ETHERNET_LINK_DN,
-//	ETHERNET_LINK_FIRST,
-//}eth_link_t;
 
 typedef enum
 {

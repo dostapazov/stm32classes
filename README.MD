@@ -7,3 +7,7 @@ ver 1.0 alpha
 
 dostapazov@gmail.com
 Ostapenko Dmitry
+
+ATTENTION!
+It is necessary to disable  the function call 
+MX_LWIP_Init () from main.c
