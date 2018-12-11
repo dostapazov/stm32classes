@@ -7,6 +7,7 @@
 #include <lwip/priv/tcp_priv.h>
 #include <common.hpp>
 
+#ifdef __cplusplus
 namespace niktes
 {
   class tcp_socket
@@ -44,6 +45,7 @@ virtual ~tcp_socket();
                  bool  is_connected();
              tcp_state state       (){return m_pcb ? m_pcb->state : tcp_state::CLOSED;}
                  void  set_prio    (uint8_t prio){if(m_pcb) tcp_setprio(m_pcb, prio); }
+                 void  keep_alive_enable(bool enabled, uint32_t keep_idle, uint8_t sent_cnt);
 
 	  
   };
@@ -111,6 +113,7 @@ virtual ~tcp_socket();
 
 
 }
+#endif
 
 #endif
 

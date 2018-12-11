@@ -1,6 +1,7 @@
 #include <lwip.hpp>
-//#include <hal_includes.h>
+
 extern "C"{
+#include <lwip/dhcp.h>
 #include "stm32f1xx_hal.h"
 #include "stm32f1xx_hal_eth.h"
 }
@@ -95,9 +96,19 @@ void lwip_app::set_link_status(bool is_linked)
 	{
 		m_is_linked = is_linked;
 		if(is_linked)
-			netif_set_link_up(m_gnetif);
+			{
+			 netif_set_link_up(m_gnetif);
+#if LWIP_DHCP
+			 dhcp_start(m_gnetif);
+#endif
+			}
 		else
+		{
+#if LWIP_DHCP
+			 dhcp_stop(m_gnetif);
+#endif
 			netif_set_link_down(m_gnetif);
+		}
 		on_link(is_linked);
 	}
 }

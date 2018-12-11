@@ -25,7 +25,8 @@ namespace niktes
 
  err_t tcp_server_socket::close()
  {
-     if(m_owner) m_owner->close_socket(this);
+     if(m_owner)
+    	  return m_owner->close_socket(this);
 	 return tcp_socket::close();
  }
 
@@ -129,7 +130,13 @@ namespace niktes
     	  {
     		++socket_count;
     		s->setup_socket();
-            s->next = socket_list;
+    		s->keep_alive_enable(true,1000,3);
+    		if(socket_list)
+    		{
+                socket_list->prev = s;
+    			s->next = socket_list;
+    		}
+
             socket_list = s;
             return ERR_OK;
     	  }

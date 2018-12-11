@@ -133,7 +133,15 @@ namespace niktes
 
     err_t  tcp_socket::close()
     {
-      return m_pcb ? tcp_close(m_pcb) : ERR_MEM;
+      err_t err = ERR_OK;
+    	if(m_pcb)
+    	{
+    	    tcp_arg(m_pcb,nullptr);
+    		err   = tcp_close(m_pcb)  ;
+    	 m_pcb = nullptr;
+    	}
+
+     return err;
     }
 
 	  err_t tcp_socket::handle_accept   ( tcp_pcb *newpcb, err_t err)
@@ -168,6 +176,7 @@ namespace niktes
 	  void  tcp_socket::handle_error    ( err_t err)
 	  {
 			UNUSED(err);
+			if(ERR_IS_FATAL(err)) close();
 
 	  }
 
@@ -176,6 +185,22 @@ namespace niktes
 			UNUSED(tpcb);
 			UNUSED(err );
 			return ERR_OK;
+	  }
+
+	  void  tcp_socket::keep_alive_enable(bool enabled, uint32_t keep_idle, uint8_t sent_cnt)
+	  {
+         if(m_pcb)
+         {
+           if(enabled)
+           {
+            m_pcb->so_options |= SOF_KEEPALIVE;
+            m_pcb->keep_idle     = keep_idle;
+            m_pcb->keep_cnt_sent = sent_cnt;
+           }
+           else
+        	   m_pcb->so_options &= ~SOF_KEEPALIVE;
+
+         }
 	  }
 
 	  err_t tcp_socket::send_data( void * data, uint16_t len)
